@@ -24,10 +24,15 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
 
                 if let Some(parent_id) = discord_channel.parent_id {
                     if profile.is_archive(parent_id) {
-                        let _ = discord_channel.edit(&ctx, EditChannel::new().category(Some(channel.category()))).await;
-                        let _ = sort_category(channel.category, &ctx).await;
-                        let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
-                            .content("The channel has been unarchived")).await;
+                        if let Some(category) = channel.category {
+                            let _ = discord_channel.edit(&ctx, EditChannel::new().category(channel.category())).await;
+                            let _ = sort_category(category, &ctx).await;
+                            let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
+                                .content("The channel has been unarchived")).await;
+                        } else {
+                            let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
+                                .content("The channel is not yet assigned a category. Please use /category to select one first!")).await;
+                        }
                     } else {
                         for archive in &profile.archives {
                             if let Ok(channels) = get_channels_in_category(*archive, &ctx).await {

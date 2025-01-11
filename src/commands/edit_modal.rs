@@ -1,9 +1,9 @@
+use crate::channel::sort_category;
 use crate::database::get_channel_by_id;
 use crate::DatabasePoolKey;
 use serenity::all::{ActionRowComponent, ModalInteraction};
 use serenity::builder::{EditChannel, EditInteractionResponse};
 use serenity::client::Context;
-use crate::channel::sort_category;
 
 pub async fn run(ctx: &Context, modal: ModalInteraction) {
     let _ = modal.defer_ephemeral(&ctx).await;
@@ -24,8 +24,10 @@ pub async fn run(ctx: &Context, modal: ModalInteraction) {
                                     .name(channel_name)
                                     .topic(channel_topic))
                                     .await {
-                                    Ok(_) => {
-                                        let _ = sort_category(channel.category, &ctx).await;
+                                    Ok(guild_channel) => {
+                                        if let Some(parent_id) = guild_channel.parent_id {
+                                            let _ = sort_category(parent_id.get(), &ctx).await;
+                                        }
                                         let _ = modal.edit_response(&ctx, EditInteractionResponse::new()
                                             .content("Channel edited!")).await;
                                     }

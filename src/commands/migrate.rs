@@ -98,7 +98,7 @@ async fn migrate_funky_text(database_pool: &Arc<SqlPool>, path: &str) -> Result<
                                         add_channel(database_pool.clone(), ConChannel {
                                             id: ChannelId::new(channel_id),
                                             owner: UserId::new(owner),
-                                            category
+                                            category: Some(category)
                                         }).await.map_err(|err| format!("Failed to add {path:?} ({channel_id}, {owner}, {category}): {err:?}"))?;
                                     } else {
                                         eprintln!("Failed to read owner and category from {path:?}");

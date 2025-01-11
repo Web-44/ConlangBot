@@ -91,12 +91,12 @@ macro_rules! user_banned {
 pub struct ConChannel {
     pub id: ChannelId,
     pub owner: UserId,
-    pub category: u64
+    pub category: Option<u64>
 }
 
 impl ConChannel {
-    pub fn category(&self) -> ChannelId {
-        ChannelId::new(self.category)
+    pub fn category(&self) -> Option<ChannelId> {
+        self.category.map(ChannelId::new)
     }
 }
 
@@ -167,7 +167,7 @@ pub async fn create_channel(creator: UserId, channel_name: &str, channel_topic: 
             match add_channel(database_pool.clone(), ConChannel {
                 id: channel.id,
                 owner: creator,
-                category: category.id
+                category: Some(category.id)
             }).await {
                 Ok(_) => {
                     let _ = sort_category(category.id, ctx).await;

@@ -27,17 +27,19 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
                     let mut discord_channel = discord_channel.guild().unwrap();
 
                     let old_category = channel.category;
-                    channel.category = category.id;
+                    channel.category = Some(category.id);
                     if let Err(err) = edit_channel(database_pool.clone(), channel).await {
                         let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
                             .content(format!("Failed to edit channel data: {err}"))).await;
                     } else {
-                        if discord_channel.parent_id == Some(ChannelId::new(old_category)) {
-                            let _ = discord_channel.edit(&ctx, EditChannel::new().category(Some(ChannelId::new(category.id)))).await;
-                            let _ = sort_category(category.id, &ctx).await;
+                        if let Some(old_category) = old_category {
+                            if discord_channel.parent_id == Some(ChannelId::new(old_category)) {
+                                let _ = discord_channel.edit(&ctx, EditChannel::new().category(Some(ChannelId::new(category.id)))).await;
+                                let _ = sort_category(category.id, &ctx).await;
+                            }
                         }
                         let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
-                            .content(format!("The channel has been moved to {}", category.name))).await;
+                            .content(format!("The channel now belongs to the {} category", category.name))).await;
                     }
                 } else {
                     let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
