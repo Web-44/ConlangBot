@@ -49,8 +49,16 @@ impl EventHandler for Handler {
     }
 
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
+        let data = ctx.data.read().await;
+        let profile = data.get::<Profile>().unwrap();
+
         match interaction {
             Interaction::Command(cmd) => {
+                if let Some(guild_id) = cmd.guild_id {
+                    if guild_id.get() != profile.guild {
+                        return;
+                    }
+                }
                 match cmd.data.name.as_str() {
                     "archive" => crate::commands::archive::run(&ctx, cmd).await,
                     "ban" => crate::commands::ban::run(&ctx, cmd).await,
@@ -69,8 +77,13 @@ impl EventHandler for Handler {
                 }
             }
             Interaction::Component(comp) => {
-                let id = comp.data.custom_id.as_str();
+                if let Some(guild_id) = comp.guild_id {
+                    if guild_id.get() != profile.guild {
+                        return;
+                    }
+                }
 
+                let id = comp.data.custom_id.as_str();
                 if id.starts_with("create-channel") {
                     crate::commands::create_interaction::run(&ctx, comp).await;
                 } else if id == "delete-channel" {
@@ -78,8 +91,13 @@ impl EventHandler for Handler {
                 }
             }
             Interaction::Modal(modal) => {
-                let id = modal.data.custom_id.as_str();
+                if let Some(guild_id) = modal.guild_id {
+                    if guild_id.get() != profile.guild {
+                        return;
+                    }
+                }
 
+                let id = modal.data.custom_id.as_str();
                 if id.starts_with("create-channel") {
                     crate::commands::create_modal::run(&ctx, modal).await;
                 } else if id == "edit-channel" {
