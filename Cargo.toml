@@ -1,0 +1,23 @@
+[package]
+name = "ConlangingHub"
+authors = ["Webbiii"]
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = "*"
+serde_json = "*"
+rand = "*"
+
+[dependencies.sqlx]
+version = "*"
+features = ["runtime-tokio-rustls", "mysql"]
+
+[dependencies.tokio]
+version = "*"
+features = ["rt-multi-thread", "macros", "fs"]
+
+[dependencies.serenity]
+version = "*"
+default-features = false
+features = ["client", "gateway", "rustls_backend", "builder", "model", "collector"]
