@@ -19,15 +19,26 @@ macro_rules! perm_writable {
 #[macro_export]
 macro_rules! owner {
     () => { perm_viewable!() | perm_writable!() | Permissions::CREATE_PUBLIC_THREADS | Permissions::CREATE_PRIVATE_THREADS |
-        Permissions::MANAGE_THREADS | Permissions::MANAGE_MESSAGES };
+        Permissions::MANAGE_THREADS | Permissions::MANAGE_MESSAGES | Permissions::MANAGE_CHANNELS };
 }
 
 #[macro_export]
-macro_rules! channel_private {
+macro_rules! hide_to_everyone {
     ($role: expr) => {
         PermissionOverwrite {
             allow: Permissions::empty(),
-            deny: perm_viewable!() | perm_writable!(),
+            deny: perm_viewable!(),
+            kind: PermissionOverwriteType::Role($role)
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! channel_public {
+    ($role: expr) => {
+        PermissionOverwrite {
+            allow: perm_viewable!() | perm_writable!(),
+            deny: Permissions::empty(),
             kind: PermissionOverwriteType::Role($role)
         }
     };
@@ -37,7 +48,7 @@ macro_rules! channel_private {
 macro_rules! channel_viewable {
     ($role: expr) => {
         PermissionOverwrite {
-            allow: Permissions::empty(),
+            allow: perm_viewable!(),
             deny: perm_writable!(),
             kind: PermissionOverwriteType::Role($role)
         }
@@ -158,7 +169,7 @@ pub async fn create_channel(creator: UserId, channel_name: &str, channel_topic: 
         .kind(ChannelType::Text)
         .category(category.id)
         .permissions(vec![
-            channel_private!(profile.everyone()),
+            hide_to_everyone!(profile.roles.everyone()),
             user_owner!(creator)
         ])).await;
 

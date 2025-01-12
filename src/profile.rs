@@ -13,8 +13,7 @@ pub struct Profile {
     pub private_archives: Vec<u64>,
     #[serde(rename = "per-row")]
     pub per_row: u8,
-    #[serde(rename = "everyone-role")]
-    pub everyone_role: u64,
+    pub roles: ProfileRoles,
     pub categories: Vec<Category>
 }
 
@@ -26,9 +25,26 @@ impl Profile {
     pub fn is_archive(&self, id: ChannelId) -> bool {
         self.archives.contains(&id.get()) || self.private_archives.contains(&id.get())
     }
+}
 
+#[derive(Clone, Deserialize)]
+pub struct ProfileRoles {
+    pub everyone: u64,
+    pub member: u64,
+    pub conlanger: u64
+}
+
+impl ProfileRoles {
     pub fn everyone(&self) -> RoleId {
-        RoleId::new(self.everyone_role)
+        RoleId::new(self.everyone)
+    }
+
+    pub fn member(&self) -> RoleId {
+        RoleId::new(self.member)
+    }
+
+    pub fn conlanger(&self) -> RoleId {
+        RoleId::new(self.conlanger)
     }
 }
 

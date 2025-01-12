@@ -29,15 +29,15 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
                 match cmd.data.options[0].name.as_str() {
                     "public" => {
                         new_mode = "fully public";
-                        let _ = discord_channel.delete_permission(&ctx, PermissionOverwriteType::Role(profile.everyone())).await;
+                        let _  = discord_channel.create_permission(&ctx, channel_public!(profile.roles.member())).await;
                     }
                     "visible" => {
                         new_mode = "visible to everyone";
-                        let _  = discord_channel.create_permission(&ctx, channel_viewable!(profile.everyone())).await;
+                        let _  = discord_channel.create_permission(&ctx, channel_viewable!(profile.roles.member())).await;
                     }
                     "private" => {
                         new_mode = "private";
-                        let _ = discord_channel.create_permission(&ctx, channel_private!(profile.everyone())).await;
+                        let _ = discord_channel.delete_permission(&ctx, PermissionOverwriteType::Role(profile.roles.member())).await;
                     }
                     _ => {
                         unreachable!("Invalid mode");

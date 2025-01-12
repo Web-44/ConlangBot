@@ -36,6 +36,7 @@ impl EventHandler for Handler {
             crate::commands::viewer::register(),
             crate::commands::wordgen::register(),
         ]).await.expect("Failed to set guild commands");
+                    crate::commands::fixperms::register(),
 
         Command::create_global_command(&ctx, crate::commands::debug::register()).await.expect("Failed to set global command: debug");
     }
@@ -68,6 +69,7 @@ impl EventHandler for Handler {
                     "debug" => crate::commands::debug::run(&ctx, cmd).await,
                     "delete" => crate::commands::delete::run(&ctx, cmd).await,
                     "edit" => crate::commands::edit::run(&ctx, cmd).await,
+                    "fixperms" => crate::commands::fixperms::run(&ctx, cmd).await,
                     "migrate" => crate::commands::migrate::run(&ctx, cmd).await,
                     "mode" => crate::commands::mode::run(&ctx, cmd).await,
                     "unban" => crate::commands::unban::run(&ctx, cmd).await,

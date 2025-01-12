@@ -12,6 +12,7 @@ pub mod delete;
 pub mod delete_interaction;
 pub mod edit;
 pub mod edit_modal;
+pub mod fixperms;
 pub mod migrate;
 pub mod mode;
 pub mod unban;
