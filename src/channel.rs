@@ -194,7 +194,8 @@ pub async fn create_channel(creator: UserId, channel_name: &str, channel_topic: 
         .category(category.id)
         .permissions(vec![
             hide_to_everyone!(profile.roles.everyone()),
-            user_owner!(creator)
+            user_owner!(creator),
+            channel_public!(profile.roles.member())
         ])).await;
 
     match res {
