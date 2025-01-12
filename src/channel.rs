@@ -1,7 +1,9 @@
+use std::any::Any;
+use std::ops::Deref;
 use crate::database::{add_channel, get_channels_by_owner};
 use crate::profile::{Category, Profile};
 use crate::DatabasePoolKey;
-use serenity::all::{ChannelId, ChannelType, CreateChannel, GuildChannel, PermissionOverwrite, PermissionOverwriteType, UserId};
+use serenity::all::{ChannelId, ChannelType, CreateChannel, GuildChannel, Member, PermissionOverwrite, PermissionOverwriteType, User, UserId};
 use serenity::client::Context;
 use serenity::model::Permissions;
 use sqlx::Error;
@@ -108,6 +110,30 @@ pub struct ConChannel {
 impl ConChannel {
     pub fn category(&self) -> Option<ChannelId> {
         self.category.map(ChannelId::new)
+    }
+
+    pub fn check_permission(&self, user: &User, invoker: &Option<Box<Member>>) -> bool {
+        if self.owner == user.id {
+            return true;
+        }
+        if let Some(invoker) = invoker {
+            if let Some(permissions) = invoker.permissions {
+                return permissions.contains(Permissions::MANAGE_CHANNELS);
+            }
+        }
+        false
+    }
+
+    pub fn check_permission_unboxed(&self, user: &User, invoker: &Option<Member>) -> bool {
+        if self.owner == user.id {
+            return true;
+        }
+        if let Some(invoker) = invoker {
+            if let Some(permissions) = invoker.permissions {
+                return permissions.contains(Permissions::MANAGE_CHANNELS);
+            }
+        }
+        false
     }
 }
 

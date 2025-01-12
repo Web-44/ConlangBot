@@ -10,7 +10,7 @@ pub async fn run(ctx: &Context, comp: ComponentInteraction) {
     let database_pool = data.get::<DatabasePoolKey>().unwrap();
 
     if let Ok(channel) = get_channel_by_id(database_pool.clone(), comp.channel_id).await {
-        if channel.owner == comp.user.id {
+        if channel.check_permission_unboxed(&comp.user, &comp.member) {
             let _ = comp.edit_response(&ctx, EditInteractionResponse::new()
                 .content("Deleting channel…")).await;
             let _ = comp.channel_id.delete(&ctx).await;

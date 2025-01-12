@@ -12,7 +12,7 @@ pub async fn run(ctx: &Context, modal: ModalInteraction) {
     let database_pool = data.get::<DatabasePoolKey>().unwrap();
 
     if let Ok(channel) = get_channel_by_id(database_pool.clone(), modal.channel_id).await {
-        if channel.owner == modal.user.id {
+        if channel.check_permission_unboxed(&modal.user, &modal.member) {
             if modal.data.components.len() == 2 &&
                 !modal.data.components[0].components.is_empty() &&
                 !modal.data.components[1].components.is_empty() {

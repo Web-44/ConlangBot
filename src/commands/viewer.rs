@@ -19,12 +19,12 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
     let database_pool = data.get::<DatabasePoolKey>().unwrap();
 
     if let Ok(channel) = get_channel_by_id(database_pool.clone(), cmd.channel_id).await {
-        if channel.owner == cmd.user.id {
+        if channel.check_permission(&cmd.user, &cmd.member) {
             if let CommandDataOptionValue::SubCommand(options) = &cmd.data.options[0].value {
                 if let Some(user) = options[0].value.as_user_id() {
                     if channel.owner == user {
                         let _ = cmd.edit_response(&ctx, EditInteractionResponse::new()
-                            .content("You can't change your own permissions")).await;
+                            .content("You can't change the channel owner's permissions")).await;
                         return;
                     }
                     if let Ok(user) = user.to_user(&ctx).await {

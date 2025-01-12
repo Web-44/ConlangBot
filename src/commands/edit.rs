@@ -13,7 +13,7 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
     let database_pool = data.get::<DatabasePoolKey>().unwrap();
 
     if let Ok(channel) = get_channel_by_id(database_pool.clone(), cmd.channel_id).await {
-        if channel.owner == cmd.user.id {
+        if channel.check_permission(&cmd.user, &cmd.member) {
             if let Ok(discord_channel) = cmd.channel_id.to_channel(&ctx).await {
                 let discord_channel = discord_channel.guild().unwrap();
                 let _ = cmd.create_response(&ctx, CreateInteractionResponse::Modal(

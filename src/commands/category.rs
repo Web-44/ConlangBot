@@ -20,7 +20,7 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
     let database_pool = data.get::<DatabasePoolKey>().unwrap();
 
     if let Ok(mut channel) = get_channel_by_id(database_pool.clone(), cmd.channel_id).await {
-        if channel.owner == cmd.user.id {
+        if channel.check_permission(&cmd.user, &cmd.member) {
             let name = cmd.data.options[0].name.as_str();
             if let Some(category) = profile.categories.iter().find(|cat| cat.name.to_lowercase().as_str() == name) {
                 if let Ok(discord_channel) = cmd.channel_id.to_channel(&ctx).await {
