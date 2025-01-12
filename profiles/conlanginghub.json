@@ -1,0 +1,37 @@
+{
+  "name": "ConlangingHub",
+  "guild": 992188860559794237,
+  "archives": [
+    994057376040755330
+  ],
+  "private-archives": [
+    1038144884479103056
+  ],
+  "per-row": 3,
+  "roles": {
+    "everyone": 992188860559794237,
+    "member": 992197687745204284,
+    "conlanger": 992553004408516719
+  },
+  "categories": [
+    {
+      "id": 992191867200475156,
+      "name": "Artlang"
+    }, {
+      "id": 993281718066880636,
+      "name": "Auxlang"
+    }, {
+      "id": 996498061251592272,
+      "name": "Engelang"
+    }, {
+      "id": 993281750526591057,
+      "name": "Memelang"
+    }, {
+      "id": 1020422138060091594,
+      "name": "Natlang"
+    }, {
+      "id": 996498090607509515,
+      "name": "Otherlang"
+    }
+  ]
+}
