@@ -18,6 +18,9 @@ pub async fn run(ctx: &Context, modal: ModalInteraction) {
                         if let Some(channel_topic) = &txt.value {
                             match create_channel(modal.user.id, channel_name, channel_topic, cat, &ctx).await {
                                 Ok(channel) => {
+                                    if let Some(member) = &modal.member {
+                                        let _ = member.add_role(&ctx, profile.roles.conlanger()).await;
+                                    }
                                     let _ = modal.edit_response(&ctx, EditInteractionResponse::new()
                                         .content(format!("Channel created: <#{}>", channel.id))).await;
                                 }
