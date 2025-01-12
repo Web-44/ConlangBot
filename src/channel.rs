@@ -1,5 +1,3 @@
-use std::any::Any;
-use std::ops::Deref;
 use crate::database::{add_channel, get_channels_by_owner};
 use crate::profile::{Category, Profile};
 use crate::DatabasePoolKey;
