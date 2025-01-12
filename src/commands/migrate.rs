@@ -36,7 +36,7 @@ pub async fn run(ctx: &Context, cmd: CommandInteraction) {
         let time = Instant::now();
 
         let result = match cmd.data.options[0].name.as_str() {
-            "txt" => {
+            "funky_text" => {
                 if let Some(path) = options[0].value.as_str() {
                     migrate_funky_text(database_pool, path).await
                 } else {
