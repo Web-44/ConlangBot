@@ -22,23 +22,29 @@ impl EventHandler for Handler {
         let data = ctx.data.read().await;
         let profile = data.get::<Profile>().expect("Failed to get profile");
 
-        profile.guild().set_commands(&ctx, vec![
-            crate::commands::archive::register(),
-            crate::commands::ban::register(),
-            crate::commands::category::register(profile),
-            crate::commands::contributor::register(),
-            crate::commands::create::register(),
-            crate::commands::delete::register(),
-            crate::commands::edit::register(),
-            crate::commands::migrate::register(),
-            crate::commands::mode::register(),
-            crate::commands::unban::register(),
-            crate::commands::viewer::register(),
-            crate::commands::wordgen::register(),
-        ]).await.expect("Failed to set guild commands");
+        if let Ok(val) = std::env::var("UPDATECMD") {
+            if val.parse().unwrap_or(false) {
+                profile.guild().set_commands(&ctx, vec![
+                    crate::commands::archive::register(),
+                    crate::commands::ban::register(),
+                    crate::commands::category::register(profile),
+                    crate::commands::contributor::register(),
+                    crate::commands::create::register(),
+                    crate::commands::delete::register(),
+                    crate::commands::edit::register(),
                     crate::commands::fixperms::register(),
+                    crate::commands::migrate::register(),
+                    crate::commands::mode::register(),
+                    crate::commands::unban::register(),
+                    crate::commands::viewer::register(),
+                    crate::commands::wordgen::register(),
+                ]).await.expect("Failed to set guild commands");
 
-        Command::create_global_command(&ctx, crate::commands::debug::register()).await.expect("Failed to set global command: debug");
+                Command::create_global_command(&ctx, crate::commands::debug::register()).await.expect("Failed to set global command: debug");
+            }
+        }
+
+        println!("ConlangBot started");
     }
 
     async fn ratelimit(&self, data: RatelimitInfo) {
