@@ -47,14 +47,6 @@ impl EventHandler for Handler {
         println!("ConlangBot started");
     }
 
-    async fn ratelimit(&self, data: RatelimitInfo) {
-        if data.global {
-            println!("[Ratelimit] Global on {:?} {} (limit {}): {} seconds", data.method, data.path, data.limit, data.timeout.as_secs());
-        } else {
-            println!("[Ratelimit] Local on {:?} {} (limit {}): {} seconds", data.method, data.path, data.limit, data.timeout.as_secs());
-        }
-    }
-
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         let data = ctx.data.read().await;
         let profile = data.get::<Profile>().unwrap();
@@ -113,6 +105,14 @@ impl EventHandler for Handler {
                 }
             }
             _ => {}
+        }
+    }
+
+    async fn ratelimit(&self, data: RatelimitInfo) {
+        if data.global {
+            println!("[Ratelimit] Global on {:?} {} (limit {}): {} seconds", data.method, data.path, data.limit, data.timeout.as_secs());
+        } else {
+            println!("[Ratelimit] Local on {:?} {} (limit {}): {} seconds", data.method, data.path, data.limit, data.timeout.as_secs());
         }
     }
 }
