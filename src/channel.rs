@@ -19,7 +19,7 @@ macro_rules! perm_writable {
 #[macro_export]
 macro_rules! owner {
     () => { perm_viewable!() | perm_writable!() | Permissions::CREATE_PUBLIC_THREADS | Permissions::CREATE_PRIVATE_THREADS |
-        Permissions::MANAGE_THREADS | Permissions::MANAGE_MESSAGES | Permissions::MANAGE_CHANNELS };
+        Permissions::MANAGE_THREADS | Permissions::MANAGE_MESSAGES };
 }
 
 #[macro_export]
