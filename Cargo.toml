@@ -4,6 +4,13 @@ authors = ["Webbiii"]
 version = "0.1.0"
 edition = "2021"
 
+[profile.release-opt]
+inherits = "release"
+strip = true
+opt-level = "z"
+lto = true
+panic = "abort"
+
 [dependencies]
 serde = "*"
 serde_json = "*"
